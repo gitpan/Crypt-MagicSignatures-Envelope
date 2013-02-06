@@ -19,11 +19,11 @@ no_index:
     - inc
 requires:
   Carp: 0
-  Crypt::MagicSignatures::Key: 0.01
+  Crypt::MagicSignatures::Key: 0.04
   Mojolicious: 3.43
   Test::More: 0
   perl: 5.010001
 resources:
   license: http://www.opensource.org/licenses/artistic-license-2.0
   repository: https://github.com/Akron/Crypt-MagicSignatures-Envelope
-version: 0.01
+version: 0.02
