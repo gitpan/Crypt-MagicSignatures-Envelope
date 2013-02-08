@@ -26,4 +26,4 @@ requires:
 resources:
   license: http://www.opensource.org/licenses/artistic-license-2.0
   repository: https://github.com/Akron/Crypt-MagicSignatures-Envelope
-version: 0.02
+version: 0.03
