@@ -1,23 +1,22 @@
 package Crypt::MagicSignatures::Envelope;
 use strict;
 use warnings;
-use Carp qw/carp croak/;
-
-use v5.10.1;
-
-our @CARP_NOT;
-
+use Carp 'carp';
 use Crypt::MagicSignatures::Key qw/b64url_encode b64url_decode/;
 use Mojo::DOM;
 use Mojo::JSON;
 use Mojo::Util qw/trim/;
 
-our $VERSION = '0.04';
+use v5.10.1;
+
+our $VERSION = '0.05';
+
+our @CARP_NOT;
 
 # MagicEnvelope namespace
-use constant ME_NS => 'http://salmon-protocol.org/ns/magic-env';
+our $ME_NS = 'http://salmon-protocol.org/ns/magic-env';
 
-sub _trim_all ($);
+sub _trim_all;
 
 # Constructor
 sub new {
@@ -51,14 +50,14 @@ sub new {
     $self = bless {}, $class;
 
     # Set data
-    $self->data(delete $self{data});
+    $self->data( delete $self{data} );
 
     # Set data type if defined
-    $self->data_type(delete $self{data_type})
+    $self->data_type( delete $self{data_type} )
       if $self{data_type};
 
     # Append all defined signatures
-    foreach (@{$self{sigs}}) {
+    foreach ( @{$self{sigs}} ) {
 
       # No value is given
       next unless $_->{value};
@@ -93,7 +92,7 @@ sub new {
       $env = $dom->at('provenance') unless $env;
 
       # Envelope doesn't exist or is in wrong namespace
-      return if !$env || $env->namespace ne ME_NS;
+      return if !$env || $env->namespace ne $ME_NS;
 
       # Retrieve and edit data
       my $data = $env->at('data');
@@ -189,8 +188,8 @@ sub new {
       # Store sig to data structure
       for ($self->{sigs}->[0]) {
 	next unless $value->[1];
-	$_->{key_id}    = $value->[0] if defined $value->[0];
-	$_->{value}     = $value->[1];
+	$_->{key_id} = $value->[0] if defined $value->[0];
+	$_->{value}  = $value->[1];
       };
 
       # ME is empty
@@ -265,7 +264,7 @@ sub sign {
     b64url_encode($self->data) :
       $self->signature_base;
 
-  # Todo: Regarding key id:
+  # Regarding key id:
   # "If the signer does not maintain individual key_ids,
   #  it SHOULD output the base64url encoded representation
   #  of the SHA-256 hash of public key's application/magic-key
@@ -275,13 +274,13 @@ sub sign {
   if ($mkey) {
 
     # No valid private key
-    return undef unless $mkey->d;
+    return unless $mkey->d;
 
     # Compute signature for base string
     my $msig = $mkey->sign( $data );
 
     # No valid signature
-    return undef unless $msig;
+    return unless $msig;
 
     # Sign envelope
     my %msig = ( value => $msig );
@@ -311,6 +310,7 @@ sub verify {
   #  of the SHA-256 hash of public key's application/magic-key
   #  representation."
 
+  # Not signed - not verifiable
   return unless $self->signed;
 
   my $verified = 0;
@@ -320,6 +320,7 @@ sub verify {
       ref $_ && ref $_ eq 'ARRAY' ? @$_ : $_
     );
 
+    # No key given
     next unless $mkey;
 
     # Get signature
@@ -333,6 +334,7 @@ sub verify {
 	last if $verified;
       };
 
+      # Verify against data
       if ($flag ~~ [qw/-data -compatible/]) {
 
 	# Verify with b64url data
@@ -545,7 +547,7 @@ sub to_json {
 
 
 # Delete all whitespaces
-sub _trim_all ($) {
+sub _trim_all {
   my $string = shift;
   $string =~ tr{\t-\x0d }{}d;
   $string;
@@ -592,6 +594,7 @@ __END__
 
 Crypt::MagicSignatures::Envelope - MagicEnvelopes for the Salmon Protocol
 
+
 =head1 SYNOPSIS
 
   use Crypt::MagicSignatures::Key;
@@ -625,7 +628,7 @@ L<MagicSignatures Specification|http://salmon-protocol.googlecode.com/svn/trunk/
 to sign messages of the
 L<Salmon Protocol|http://www.salmon-protocol.org/>.
 MagicSignatures is a
-I<"robust mechanism for digitally signing nearly arbitrary messages">.
+"robust mechanism for digitally signing nearly arbitrary messages".
 
 B<This module is an early release! There may be significant changes in the future.>
 
@@ -659,7 +662,7 @@ Defaults to C<text/plain>.
 
 =head2 dom
 
-  Fold an xml message
+  # Fold an xml message
   my $me = Crypt::MagicSignatures::Envelope->new( data => <<'XML' );
   <?xml version='1.0' encoding='UTF-8'?>
   <entry xmlns='http://www.w3.org/2005/Atom'>
@@ -733,7 +736,6 @@ MagicEnvelope was signed with this specific key.
 
 
 =head1 METHODS
-
 
 =head2 new
 
@@ -828,7 +830,7 @@ L<Crypt::MagicSignatures::Key> constructor.
 Optionally a flag C<-data> can be passed,
 that will sign the data payload instead of the
 L<signature base string|http://salmon-protocol.googlecode.com/svn/trunk/draft-panzer-magicsig-01.html#rfc.section.3.2>
-I<(this is implemented for compatibility with non-standard implementations)>.
+(this is implemented for compatibility with non-standard implementations).
 
 On success, the method returns the MagicEnvelope,
 otherwise it returns a C<false> value.
@@ -870,7 +872,7 @@ of the MagicEnvelope.
 C<-data> will verify against the data only, C<-compatible> will first try to
 verify against the base signature string and then will
 verify against the data on failure
-I<(this is implemented for compatibility with non-standard implementations)>.
+(this is implemented for compatibility with non-standard implementations).
 
 B<This method is experimental and may change without warning!>
 
@@ -906,11 +908,13 @@ of a valid xml document.
 
 L<Crypt::MagicSignatures::Key>,
 L<Mojolicious>.
+For speed improvements, see the recommendations in
+L<Crypt::MagicSignatures::Key|Crypt::MagicSignatures::Key/DEPENDENCIES>.
 
 
 =head1 KNOWN BUGS AND LIMITATIONS
 
-The signing and verifification is not guaranteed to be
+The signing and verification is not guaranteed to be
 compatible with other implementations!
 Implementations like L<StatusNet|http://status.net/> (L<Identi.ca|http://identi.ca/>),
 L<MiniMe|https://code.google.com/p/minime-microblogger/>, and examples from the

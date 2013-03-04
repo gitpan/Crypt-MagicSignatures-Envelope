@@ -1,3 +1,10 @@
+0.05 2013-03-04
+        - Update C::MS::Key dependency.
+	- Add recommendations for speed improvement.
+	- Update Makefile.
+	- Some improvements based on perlcritic.
+	- Improvements of documentation.
+
 0.04 2013-02-14
         - Small code improvements.
 	- Update C::MS::Key dependency.

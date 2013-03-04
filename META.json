@@ -1,10 +1,10 @@
 {
-   "abstract" : "unknown",
+   "abstract" : "MagicEnvelopes for the Salmon Protocol",
    "author" : [
       "Nils Diewald"
    ],
    "dynamic_config" : 1,
-   "generated_by" : "ExtUtils::MakeMaker version 6.64, CPAN::Meta::Converter version 2.120921",
+   "generated_by" : "ExtUtils::MakeMaker version 6.62, CPAN::Meta::Converter version 2.120921",
    "license" : [
       "perl_5"
    ],
@@ -22,7 +22,7 @@
    "prereqs" : {
       "build" : {
          "requires" : {
-            "ExtUtils::MakeMaker" : "0"
+            "Test::More" : "0"
          }
       },
       "configure" : {
@@ -31,11 +31,15 @@
          }
       },
       "runtime" : {
+         "recommends" : {
+            "Math::BigInt::GMP" : "0",
+            "Math::Prime::Util::GMP" : "0.06",
+            "Math::Random::ISAAC::XS" : "1.004"
+         },
          "requires" : {
             "Carp" : "0",
-            "Crypt::MagicSignatures::Key" : "0.06",
+            "Crypt::MagicSignatures::Key" : "0.08",
             "Mojolicious" : "3.43",
-            "Test::More" : "0",
             "perl" : "5.010001"
          }
       }
@@ -49,5 +53,5 @@
          "url" : "https://github.com/Akron/Crypt-MagicSignatures-Envelope"
       }
    },
-   "version" : "0.04"
+   "version" : "0.05"
 }
