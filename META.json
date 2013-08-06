@@ -38,8 +38,8 @@
          },
          "requires" : {
             "Carp" : "0",
-            "Crypt::MagicSignatures::Key" : "0.08",
-            "Mojolicious" : "3.43",
+            "Crypt::MagicSignatures::Key" : "0.09",
+            "Mojolicious" : "4.23",
             "perl" : "5.010001"
          }
       }
@@ -53,5 +53,5 @@
          "url" : "https://github.com/Akron/Crypt-MagicSignatures-Envelope"
       }
    },
-   "version" : "0.05"
+   "version" : "0.06"
 }

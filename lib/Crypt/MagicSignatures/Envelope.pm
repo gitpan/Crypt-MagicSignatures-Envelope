@@ -9,7 +9,7 @@ use Mojo::Util qw/trim/;
 
 use v5.10.1;
 
-our $VERSION = '0.05';
+our $VERSION = '0.06';
 
 our @CARP_NOT;
 
@@ -103,7 +103,7 @@ sub new {
       my $temp;
 
       # Add data type if given
-      $self->data_type( $temp ) if $temp = $data->attrs->{type};
+      $self->data_type( $temp ) if $temp = $data->attr->{type};
 
       # Add decoded data
       $self->data( b64url_decode( $data->text ) );
@@ -130,7 +130,7 @@ sub new {
 
 	  my %sig = ( value => _trim_all $sig_text );
 
-	  if ($temp = $_->attrs->{key_id}) {
+	  if ($temp = $_->attr->{key_id}) {
 	    $sig{key_id} = $temp;
 	  };
 
@@ -335,7 +335,7 @@ sub verify {
       };
 
       # Verify against data
-      if ($flag ~~ [qw/-data -compatible/]) {
+      if ($flag eq '-data' || $flag eq '-compatible') {
 
 	# Verify with b64url data
 	$verified = $mkey->verify(b64url_encode($self->data) => $sig->{value});
@@ -556,7 +556,11 @@ sub _trim_all {
 sub _key_array {
   return () unless @_;
 
-  my $flag = $_[-1] ~~ [qw/-data -compatible -base/] ? pop : '-base';
+  my $flag = '-base';
+
+  if ($_[-1] eq '-data' || $_[-1] eq '-compatible' || $_[-1] eq '-base') {
+    $flag = pop;
+  };
 
   my $key  = pop;
   my $key_id = shift;
@@ -679,7 +683,7 @@ Defaults to C<text/plain>.
 The L<Mojo::DOM> object of the decoded data,
 in the case the MagicEnvelope contains XML.
 
-B<This attribute is experimental and may change without warning!>
+B<This attribute is experimental and may change without warnings!>
 
 
 =head2 encoding
@@ -837,7 +841,7 @@ otherwise it returns a C<false> value.
 
 A MagicEnvelope can be signed multiple times.
 
-B<This method is experimental and may change without warning!>
+B<This method is experimental and may change without warnings!>
 
 
 =head2 verify
@@ -874,7 +878,7 @@ verify against the base signature string and then will
 verify against the data on failure
 (this is implemented for compatibility with non-standard implementations).
 
-B<This method is experimental and may change without warning!>
+B<This method is experimental and may change without warnings!>
 
 
 =head2 to_compact
