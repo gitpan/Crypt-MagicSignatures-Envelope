@@ -4,9 +4,9 @@
       "Nils Diewald"
    ],
    "dynamic_config" : 1,
-   "generated_by" : "ExtUtils::MakeMaker version 6.62, CPAN::Meta::Converter version 2.120921",
+   "generated_by" : "ExtUtils::MakeMaker version 6.82, CPAN::Meta::Converter version 2.120351",
    "license" : [
-      "perl_5"
+      "artistic_2"
    ],
    "meta-spec" : {
       "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
@@ -33,12 +33,12 @@
       "runtime" : {
          "recommends" : {
             "Math::BigInt::GMP" : "0",
-            "Math::Prime::Util::GMP" : "0.06",
+            "Math::Prime::Util::GMP" : "0.18",
             "Math::Random::ISAAC::XS" : "1.004"
          },
          "requires" : {
             "Carp" : "0",
-            "Crypt::MagicSignatures::Key" : "0.09",
+            "Crypt::MagicSignatures::Key" : "0.13",
             "Mojolicious" : "4.23",
             "perl" : "5.010001"
          }
@@ -53,5 +53,5 @@
          "url" : "https://github.com/Akron/Crypt-MagicSignatures-Envelope"
       }
    },
-   "version" : "0.06"
+   "version" : "0.07"
 }
